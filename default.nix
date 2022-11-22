@@ -135,7 +135,7 @@ in
       };
     };
     systemd.services = {
-      "podman-graflux" = {
+      "podman-grafana" = {
         postStart = ''
           ${pkgs.coreutils-full}/bin/printf '%s\n' "http:" \
           "  routers:"   \
