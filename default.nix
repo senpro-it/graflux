@@ -12,49 +12,17 @@ in
 
   options = {
     senpro.oci-containers.graflux = {
-      grafana.traefik.fqdn = mkOption {
-        type = types.str;
-        default = "grafana.local";
-        example = "grafana.example.com";
-        description = ''
-          Defines the FQDN under which the predefined container endpoint should be reachable.
-        '';
+      grafana = {
+        traefik.fqdn = mkOption {
+          type = types.str;
+          default = "grafana.local";
+          example = "grafana.example.com";
+          description = ''
+            Defines the FQDN under which the predefined container endpoint should be reachable.
+          '';
+        };
       };
       influxdb = {
-        influxdb = {
-          username = mkOption {
-            type = types.str;
-            default = "admin";
-            example = "admin";
-            description = ''
-              Username of the intial super-admin for InfluxDB.
-            '';
-          };
-          password = mkOption {
-            type = types.str;
-            default = "uNjJcFVAG7dBm3vNz4kTJfWPVPW6F4hzpTMUhIRuf2J84WHZhv5ySr3GTQ9DG2Qd";
-            example = "CYTguLY36czXAu8rkZZAyJGhJAks6YgaE2gI5X6N4Cw6qGGsDXDagu9fT7WCa9jU";
-            description = ''
-              Password of the intial super-admin for InfluxDB.
-            '';
-          };
-          organisation = mkOption {
-            type = types.str;
-            default = "influx";
-            example = "example-it";
-            description = ''
-              Name of the initial organisation created by InfluxDB.
-            '';
-          };
-          bucket = mkOption {
-            type = types.str;
-            default = "influx";
-            example = "example-bucket";
-            description = ''
-              Name of the initial bucket created by InfluxDB.
-            '';
-          };
-        };
         traefik.fqdn = mkOption {
           type = types.str;
           default = "influxdb.local";
@@ -64,13 +32,15 @@ in
           '';
         };
       };
-      prometheus.traefik.fqdn = mkOption {
-        type = types.str;
-        default = "prometheus.local";
-        example = "prometheus.example.com";
-        description = ''
-          Defines the FQDN under which the predefined container endpoint should be reachable.
-        '';
+      prometheus = {
+        traefik.fqdn = mkOption {
+          type = types.str;
+          default = "prometheus.local";
+          example = "prometheus.example.com";
+          description = ''
+            Defines the FQDN under which the predefined container endpoint should be reachable.
+          '';
+        };
       };
     };
   };
@@ -102,14 +72,6 @@ in
           "graflux-influxdb-conf:/etc/influxdb2"
           "graflux-influxdb-data:/var/lib/influxdb2"
         ];
-        environment = {
-          DOCKER_INFLUXDB_INIT_MODE = "setup";
-          DOCKER_INFLUXDB_INIT_USERNAME = "${cfg.influxdb.influxdb.username}";
-          DOCKER_INFLUXDB_INIT_PASSWORD = "${cfg.influxdb.influxdb.password}";
-          DOCKER_INFLUXDB_INIT_ORG = "${cfg.influxdb.influxdb.organisation}";
-          DOCKER_INFLUXDB_INIT_BUCKET = "${cfg.influxdb.influxdb.bucket}";
-          DOCKER_INFLUXDB_INIT_RETENTION = "1y";
-        };
         autoStart = true;
       };
       prometheus = {

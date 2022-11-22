@@ -12,12 +12,6 @@ Add the following statement to your `imports = [];` in `configuration.nix` and d
         traefik.fqdn = "<your-fqdn>";
       };
       influxdb = {
-        influxdb = {
-          username = "<your-username>";
-          password = "<your-password>";
-          organisation = "<your-organisation>";
-          bucket = "<your-bucket>";
-        };
         traefik.fqdn = "<your-fqdn>";
       };
       prometheus = {
