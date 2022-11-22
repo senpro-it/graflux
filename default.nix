@@ -94,7 +94,7 @@ in
         autoStart = true;
       };
       influxdb = {
-        image = "docker.io/_/influxdb:latest";
+        image = "docker.io/library/influxdb:latest";
         extraOptions = [
           "--net=proxy"
         ];
