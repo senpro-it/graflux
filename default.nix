@@ -80,6 +80,7 @@ in
           "--net=proxy"
         ];
         volumes = [
+          "graflux-alertmanager-conf:/config"
           "graflux-alertmanager-data:/data"
         ];
         cmd = [
@@ -127,6 +128,9 @@ in
           "        passHostHeader: true" \
           "        servers:" \
           "        - url: \"http://alertmanager:9093\"" > $(${pkgs.podman}/bin/podman volume inspect traefik --format "{{.Mountpoint}}")/conf.d/apps-graflux.yml
+          ${pkgs.coreutils-full}/bin/printf '%s\n' "route:" \
+          ""   \
+          "receivers:" > $(${pkgs.podman}/bin/podman volume inspect graflux-alertmanager-conf --format "{{.Mountpoint}}")/alertmanager.yml
         '';
       };
     };
