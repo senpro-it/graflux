@@ -32,7 +32,7 @@ in
           '';
         };
       };
-      prometheus = {
+      alertmanager = {
         traefik.fqdn = mkOption {
           type = types.str;
           default = "prometheus.local";
@@ -74,24 +74,16 @@ in
         ];
         autoStart = true;
       };
-      prometheus = {
-        image = "docker.io/prom/prometheus:latest";
+      alertmanager = {
+        image = "docker.io/prom/alertmanager:latest";
         extraOptions = [
           "--net=proxy"
         ];
         volumes = [
-          "graflux-prometheus-conf:/etc/prometheus"
-          "graflux-prometheus-data:/prometheus"
+          "graflux-alertmanager-data:/data"
         ];
         cmd = [
-          "--config.file=/etc/prometheus/prometheus.yml"
-          "--storage.tsdb.path=/prometheus"
-          "--storage.tsdb.retention.time=200h"
-          "--web.config.file=/etc/prometheus/web.yml"
-          "--web.console.libraries=/etc/prometheus/console_libraries"
-          "--web.console.templates=/etc/prometheus/consoles"
-          "--web.enable-lifecycle"
-          "--web.enable-remote-write-receiver"
+          "--log.level=debug"
         ];
         autoStart = true;
       };
@@ -113,8 +105,8 @@ in
           "      entryPoints:" \
           "      - \"https2-tcp\"" \
           "      tls: true" \
-          "    prometheus:" \
-          "      rule: \"Host(\`${cfg.prometheus.traefik.fqdn}\`)\"" \
+          "    alertmanager:" \
+          "      rule: \"Host(\`${cfg.alertmanager.traefik.fqdn}\`)\"" \
           "      service: \"prometheus\"" \
           "      entryPoints:" \
           "      - \"https2-tcp\"" \
@@ -130,11 +122,11 @@ in
           "        passHostHeader: true" \
           "        servers:" \
           "        - url: \"http://influxdb:8086\"" \
-          "    prometheus:" \
+          "    alertmanager:" \
           "      loadBalancer:" \
           "        passHostHeader: true" \
           "        servers:" \
-          "        - url: \"http://prometheus:9090\"" > $(${pkgs.podman}/bin/podman volume inspect traefik --format "{{.Mountpoint}}")/conf.d/apps-graflux.yml
+          "        - url: \"http://alertmanager:9093\"" > $(${pkgs.podman}/bin/podman volume inspect traefik --format "{{.Mountpoint}}")/conf.d/apps-graflux.yml
         '';
       };
     };
